@@ -1,0 +1,14 @@
+.container {
+  padding-inline: 2rem;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+  @include gap-space();
+}
+
+.flex-between {
+  @extend .flex;
+  justify-content: space-between;
+}
