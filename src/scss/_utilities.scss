@@ -1,5 +1,11 @@
 .container {
+  max-width: 110rem;
+  margin-inline: auto;
   padding-inline: 2rem;
+
+  @include desktop {
+    padding-inline: 0;
+  }
 }
 
 .flex {
@@ -11,4 +17,9 @@
 .flex-between {
   @extend .flex;
   justify-content: space-between;
+}
+
+.flex-center {
+  @extend .flex;
+  justify-content: center;
 }

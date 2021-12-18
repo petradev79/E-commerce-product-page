@@ -3,7 +3,7 @@
     <div class="overlay" v-show="isNavOpen"></div>
   </transition>
   <transition name="slide">
-    <nav class="nav flex" v-show="isNavOpen">
+    <nav class="nav-mobile flex" v-show="isNavOpen">
       <a href="#">Collections</a>
       <a href="#">Men</a>
       <a href="#">Women</a>
@@ -18,7 +18,7 @@ export default {
   props: {
     isNavOpen: {
       type: Boolean,
-      defoult: false,
+      default: false,
     },
   },
 };
@@ -32,7 +32,7 @@ export default {
   z-index: 100;
 }
 
-.nav {
+.nav-mobile {
   flex-direction: column;
   align-items: flex-start;
   @include gap-space(2.5rem);

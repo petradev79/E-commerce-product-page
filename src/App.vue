@@ -1,29 +1,138 @@
 <template>
-  <Header />
-  <!-- <p>
-    Sneaker Company Fall Limited Edition Sneakers These low-profile sneakers are
-    your perfect casual wear companion. Featuring a durable rubber outer sole,
-    they’ll withstand everything the weather can offer. $125.00 50% $250.00 0
-    Add to cart Challenge by Frontend Mentor. Coded by Your Name Here.
-  </p> -->
+  <Header
+    :mobileView="mobileView"
+    :product="cartProduct"
+    @delete-product="deleteFromCart"
+  />
+  <main class="main container">
+    <Gallery
+      :mobileView="mobileView"
+      :imgNumbers="imgNumbers"
+      @open-lightbox="
+        !mobileView ? (showLightbox = true) : (showLightbox = false)
+      "
+    />
+    <Product :product="product" @add-product="addToCart" />
+  </main>
+  <p class="copyright">
+    Challenge by <span>Frontend Mentor</span>. Coded by
+    <span>Ivan Petrović</span>.
+  </p>
+  <transition name="show">
+    <Lightbox
+      v-if="showLightbox"
+      :imgNumbers="imgNumbers"
+      @close-lightbox="showLightbox = false"
+    />
+  </transition>
 </template>
 
 <script>
 import Header from '@/components/Header.vue';
+import Gallery from '@/components/Gallery.vue';
+import Product from '@/components/Product.vue';
+import Lightbox from '@/components/Lightbox.vue';
 
 export default {
   name: 'App',
-  components: { Header },
+  components: { Header, Gallery, Product, Lightbox },
+  data() {
+    return {
+      mobileView: false,
+      showLightbox: false,
+      imgNumbers: {
+        imgProductNumber: 1,
+        thumbnailNumbers: [1, 2, 3, 4],
+      },
+      product: {
+        title: 'Fall Limited Edition Sneakers',
+        imgUrl: require('@/assets/images/image-product-1-thumbnail.jpg'),
+        price: {
+          old: 250,
+          discount: 50,
+          new: 0,
+        },
+        counter: 0,
+      },
+      cartProduct: {},
+    };
+  },
+  created() {
+    window.addEventListener('resize', this.handleView);
+    this.handleView();
+    this.product.price.new = this.getNewPrice();
+  },
+  methods: {
+    handleView() {
+      this.mobileView = window.innerWidth <= 768;
+    },
+    getNewPrice() {
+      return (this.product.price.discount / 100) * this.product.price.old;
+    },
+    getTotal(price, counter) {
+      return price * counter;
+    },
+    addToCart(product) {
+      if (product.counter !== 0) {
+        if (Object.keys(this.cartProduct).length === 0) {
+          this.cartProduct = { ...product };
+        } else {
+          this.cartProduct.counter = this.cartProduct.counter + product.counter;
+        }
+        this.cartProduct.total = this.getTotal(
+          this.cartProduct.price.new,
+          this.cartProduct.counter
+        );
+        this.product.counter = 0;
+      }
+    },
+    deleteFromCart() {
+      if (this.cartProduct.counter > 1) {
+        this.cartProduct.counter--;
+      } else {
+        this.cartProduct = {};
+      }
+    },
+  },
 };
 </script>
 
 <style lang="scss">
-// Users should be able to:
+.main {
+  @include desktop {
+    display: flex;
+    align-items: center;
+    gap: 12rem;
+    margin-top: 10rem;
+    padding-inline: 5rem;
+  }
+}
 
-// - View the optimal layout for the site depending on their device's screen size
-// - See hover states for all interactive elements on the page
-// - Open a lightbox gallery by clicking on the large product image
-// - Switch the large product image by clicking on the small thumbnail images
-// - Add items to the cart
-// - View the cart and remove items from it
+.copyright {
+  padding: 2rem;
+  text-align: center;
+  line-height: 1.6;
+
+  span {
+    font-weight: 700;
+    color: $orange;
+  }
+
+  @include desktop {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+// lightbox show in/out transition
+.show-enter-from,
+.show-leave-to {
+  opacity: 0;
+}
+.show-enter-active,
+.show-leave-active {
+  @include smooth-transition(opacity, 0.3s);
+}
 </style>
