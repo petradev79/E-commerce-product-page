@@ -109,6 +109,7 @@ export default {
 }
 
 .copyright {
+margin-top: 5rem;
   padding: 2rem;
   text-align: center;
   line-height: 1.6;
