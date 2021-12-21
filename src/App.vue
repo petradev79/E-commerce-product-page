@@ -118,12 +118,7 @@ export default {
     color: $orange;
   }
 
-  @include desktop {
-    position: absolute;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%);
-  }
+  
 }
 
 // lightbox show in/out transition
